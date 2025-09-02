@@ -20,7 +20,7 @@ export const register = async (req, res) => {
     const { email, username, password } = req.body;
     //console.log(email, username, password);
     if (!email || !username || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ errors: "All fields are required" });
     }
     const validation = userSchema.safeParse({ email, username, password });
     if (!validation.success) {
@@ -31,7 +31,7 @@ export const register = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ message: "User already registered" });
+      return res.status(400).json({ errors: "User already registered" });
     }
 
     const hash_pass = await bcrypt.hash(password, 10);
@@ -47,7 +47,7 @@ export const register = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(401).send({ message: "Error registering user" });
+    res.status(401).send({ errors: "Error registering user" });
   }
 };
 
@@ -55,7 +55,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({ errors: "All fields are required" });
     }
     const user = await User.findOne({ email }).select("+password");
     if (!user || !(await bcrypt.compare(password, user.password))) {

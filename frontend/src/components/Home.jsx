@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import { Navigate } from 'react-router-dom';
 
 function Home() {
     const [todos, setTodos]=useState([]);
@@ -69,6 +71,17 @@ function Home() {
         }
     }
 
+    const logout = async ()=>{
+        try {
+            await axios.get("http://localhost:3000/user/logout")
+            toast.success("User logged out successfully ");
+            <Navigate to={"/login"}/>
+            localStorage.removeItem("jwt");
+        } catch (error) {
+            toast.error("Error logging out")
+        }
+    }
+
     const remainingTodos=todos.filter((todo)=>!todo.completed).length;
 
   return (
@@ -107,7 +120,9 @@ function Home() {
       
 
       <p className='mt-4 text-center text-sm text-gray-700'>{remainingTodos} todo remaining</p>
-      <button  className='mt-6 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-800 duration-500 mx-auto block'>Logout</button>
+      <button  
+      onClick={()=> logout()}
+      className='mt-6 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-800 duration-500 mx-auto block'>Logout</button>
     </div>
   )
 }

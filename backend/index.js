@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import todoRouter from "./routes/todo.route.js";
 import userRoutere from "./routes/user.route.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -12,6 +13,7 @@ const DB_URL = process.env.MONGO_DB_URL;
 
 //middleware
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
